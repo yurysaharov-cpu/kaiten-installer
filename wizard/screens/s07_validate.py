@@ -68,14 +68,16 @@ class ValidateScreen(BaseScreen):
                 ok, msg = True, "✓ OK"
 
             elif name == "pachca":
-                # /chats (список) требует scope chats:read — используем конкретный чат
+                # Сервис использует только messages:create — chats:read может отсутствовать.
+                # 401 = токен неверный, 403 = токен валиден но нет scope на этот endpoint.
                 chat_id = cfg.get("PACHCA_CHAT_ID", "")
                 r = httpx.get(
                     f"{cfg['PACHCA_BASE_URL'].rstrip('/')}/chats/{chat_id}",
                     headers={"Authorization": f"Bearer {cfg['PACHCA_TOKEN']}"},
                     timeout=10,
                 )
-                r.raise_for_status()
+                if r.status_code == 401:
+                    raise Exception("Токен недействителен (401 Unauthorized)")
                 ok, msg = True, "✓ OK"
 
             elif name == "anthropic":
