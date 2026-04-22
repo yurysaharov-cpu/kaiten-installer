@@ -1,0 +1,8 @@
+services:
+  kaiten-watcher:
+    build: .
+    restart: unless-stopped
+    env_file: config.env
+    volumes:
+      - ./state.json:/app/state.json
+      - ./service_account.json:/app/service_account.json
