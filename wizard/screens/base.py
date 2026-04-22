@@ -13,10 +13,21 @@ class BaseScreen(ctk.CTkFrame):
         self.app = app
         self._err_label = None
         self._build_header()
+        # footer пакуется с side="bottom" ДО body — иначе body вытесняет его за экран
+        self._build_footer()
+        # фиксированная зона для ошибок (между body и footer, всегда видна)
+        self._err_bar = ctk.CTkFrame(self, fg_color="#FFF3F3", height=0, corner_radius=0)
+        self._err_bar.pack(fill="x", side="bottom")
+        self._err_bar.pack_propagate(False)
+        self._err_label = ctk.CTkLabel(
+            self._err_bar, text="",
+            font=ctk.CTkFont("Helvetica Neue", 12),
+            text_color="#C62828", anchor="w",
+        )
+        self._err_label.pack(anchor="w", padx=22, pady=6)
         self._body = ctk.CTkScrollableFrame(self, fg_color="#ffffff", corner_radius=0)
         self._body.pack(fill="both", expand=True, padx=30, pady=10)
         self.build()
-        self._build_footer()
 
     def _build_header(self):
         bar = ctk.CTkFrame(self, fg_color=HEADER_COLOR, height=62, corner_radius=0)
@@ -97,12 +108,5 @@ class BaseScreen(ctk.CTkFrame):
         ).pack(anchor="w", pady=(2, 0))
 
     def error(self, text):
-        if self._err_label:
-            self._err_label.configure(text=text)
-        else:
-            self._err_label = ctk.CTkLabel(
-                self._body, text=text,
-                font=ctk.CTkFont("Helvetica Neue", 12),
-                text_color="#C62828", anchor="w", wraplength=580,
-            )
-            self._err_label.pack(anchor="w", pady=(6, 0))
+        self._err_label.configure(text=text)
+        self._err_bar.configure(height=34 if text else 0)
