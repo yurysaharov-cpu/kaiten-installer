@@ -29,7 +29,7 @@ class ValidateScreen(BaseScreen):
             lbl = ctk.CTkLabel(
                 row, text="—",
                 font=ctk.CTkFont("Helvetica Neue", 12),
-                text_color="#757575", anchor="w",
+                text_color="#757575", anchor="w", wraplength=340, justify="left",
             )
             lbl.pack(side="left", padx=8, fill="x", expand=True)
             btn = ctk.CTkButton(
@@ -68,8 +68,10 @@ class ValidateScreen(BaseScreen):
                 ok, msg = True, "✓ OK"
 
             elif name == "pachca":
+                # /chats (список) требует scope chats:read — используем конкретный чат
+                chat_id = cfg.get("PACHCA_CHAT_ID", "")
                 r = httpx.get(
-                    f"{cfg['PACHCA_BASE_URL'].rstrip('/')}/chats",
+                    f"{cfg['PACHCA_BASE_URL'].rstrip('/')}/chats/{chat_id}",
                     headers={"Authorization": f"Bearer {cfg['PACHCA_TOKEN']}"},
                     timeout=10,
                 )
