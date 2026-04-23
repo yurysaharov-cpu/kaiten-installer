@@ -124,12 +124,12 @@ def run():
 
     seen_ids, pending_review, pending_eval = load_state()
 
-    if not seen_ids:
+    if not STATE_FILE.exists():
         log.info("First run — initializing state, no notifications sent")
         cards = poll()
         save_state(set(cards.keys()), [], [])
-        log.info("Initialized with %d cards", len(cards))
-        return
+        log.info("Initialized with %d cards (polling starts now)", len(cards))
+        seen_ids = set(cards.keys())
 
     while True:
         try:
