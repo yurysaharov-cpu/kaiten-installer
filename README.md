@@ -115,6 +115,14 @@ Wizard проведёт через 9 шагов:
 
 **VPS:** `/opt/kaiten-watcher/` (или путь, указанный в Wizard)
 
+## Изменение настроек
+
+После редактирования `~/.kaiten-watcher/config.env` перезапустить контейнер:
+
+```bash
+cd ~/.kaiten-watcher && docker compose restart
+```
+
 ## Переустановка
 
 Удалить каталог с данными и запустить Wizard заново:
